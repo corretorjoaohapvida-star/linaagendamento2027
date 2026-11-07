@@ -1,0 +1,14 @@
+'use strict';
+(()=>{const rail=document.querySelector('#inicio .ref-cover-grid'),tabs=[...document.querySelectorAll('[data-hero-model]')];if(!rail||!tabs.length)return;tabs.forEach((t,i)=>t.onclick=()=>rail.scrollTo({left:rail.children[i].offsetLeft-rail.offsetLeft,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));rail.addEventListener('scroll',()=>{let selected=0,distance=Infinity;[...rail.children].forEach((s,i)=>{const d=Math.abs(s.offsetLeft-rail.offsetLeft-rail.scrollLeft);if(d<distance){selected=i;distance=d;}});tabs.forEach((t,i)=>{t.classList.toggle('active',i===selected);t.setAttribute('aria-pressed',String(i===selected));});},{passive:true});})();
+document.querySelectorAll('.ref-gallery').forEach(root=>{
+  const slides=[...root.querySelectorAll('.ref-slide')],dots=[...root.querySelectorAll('.ref-dot')];let current=0,start=null;
+  const count=document.createElement('span');count.className='ref-position';count.setAttribute('aria-live','polite');root.querySelector('.ref-dots').after(count);
+  const go=n=>{current=(n+slides.length)%slides.length;slides.forEach((s,i)=>{s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',String(i!==current));s.tabIndex=i===current?0:-1;});dots.forEach((d,i)=>{d.classList.toggle('active',i===current);d.setAttribute('aria-pressed',String(i===current));});root.querySelector('.ref-caption').textContent=slides[current].dataset.caption;count.textContent=`${current+1} / ${slides.length}`;};
+  root.querySelector('.ref-prev').onclick=()=>go(current-1);root.querySelector('.ref-next').onclick=()=>go(current+1);dots.forEach((d,i)=>d.onclick=()=>go(i));
+  root.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();go(current+(e.key==='ArrowRight'?1:-1));}});
+  const view=root.querySelector('.ref-slides');view.addEventListener('touchstart',e=>start=e.touches[0].clientX,{passive:true});view.addEventListener('touchend',e=>{if(start!==null){const delta=e.changedTouches[0].clientX-start;if(Math.abs(delta)>35)go(current+(delta<0?1:-1));}start=null;},{passive:true});go(0);
+});
+const comparison=document.querySelector('#compare-dialog');
+document.querySelector('.compare-trigger')?.addEventListener('click',()=>comparison.showModal());
+document.querySelectorAll('[data-view-pack]').forEach(button=>button.addEventListener('click',()=>{comparison.close();const card=document.querySelector(`.price-card.${button.dataset.viewPack}`);card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});card.classList.remove('pack-focus');void card.offsetWidth;card.classList.add('pack-focus');}));
+document.querySelectorAll('.faq-item').forEach(item=>item.addEventListener('toggle',()=>{if(item.open)document.querySelectorAll('.faq-item').forEach(other=>{if(other!==item)other.open=false;});}));

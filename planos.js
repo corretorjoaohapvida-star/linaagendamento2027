@@ -1,0 +1,1 @@
+window.PLANOS={basico:{nome:'Básico',preco:'R$ 17,90',checkout:'https://pay.wiapy.com/6aeebad7371815cbec70d25c'},completo:{nome:'Pack de Agendamentos Premium',preco:'R$ 37,90',checkout:'https://pay.wiapy.com/d1aEXldEk6RN'}};
